@@ -1,0 +1,95 @@
+10.08：数据增强和分割图像块，得到标签化的离线数据集并划分Train, Val, Test Set
+每一对PAM做了144种增强，获取了AR和OR（7,144,2000,2000）的数组；选取了（200,200）的图像块，对划分成块的每张PAM，任选一行的偶数列图像块共7*144*5组成验证集，同一行奇数列图像块共7*144*5组成测试集，剩余7*144*90图像块组成训练集。所有数据都保存了（N, H, W）的npy数组并可视化验证了，数据增强和拆分都没问题，至于数据的标签(group, region)是可以从其序号N反推得到的。——Train, Val, Test Set都需要额外加上label(group, region)
+
+10.09： 血管分割
+
+阈值化分割（二）OTSU法-附Python实现
+https://blog.csdn.net/u010128736/article/details/52801310
+阈值分割的OTSU算法
+https://blog.mythsman.com/post/5d3076be976abc05b3454727/
+知乎提问：医学图像分割
+https://www.zhihu.com/question/22181712
+OpenCV图像分割python版
+https://blog.csdn.net/Xin_101/article/details/85602500
+python+OpenCV图像处理（五）图像的阈值分割
+https://blog.csdn.net/qq_40962368/article/details/80917250
+
+
+文献: Vessel segmentation analysis of ischemic stroke images acquired withphotoacoustic microscopy
+
+1.require the selection of a rough vessel boundary by the user
+2.apply the Otsu thresholding algorithm
+3. using a modified bifurcation detection algorithm [6], the segmented vessel branches were further divided into smaller vessel bifurcations.Vessel bifurcations inside the infarct region were determined by using postmortem triphenyltetrazolium chloride (TTC) staining.
+
+由于本PAM图像在（0，255）标准化后像素仍然集中在灰度为偏0附近，未出现明显“背景-目标”双峰，即背景-目标像素分布太过接近，Ostu分割效果，尝试opencv的自适应阈值分割，也只能差强人意....
+
+因此尝试血管分割，计算图像块血管密度，以此基于血管密度的阈值筛选淘汰图像块的想法恐难以实现....
+
+10.11 图像标准化(0,255)的算法修改正确，显示直方图和cv的自适应阈值分割初步结果都还不错
+
+任务1. 对PAM图像的自适应阈值分割结果还需要后期删除小面积连通域
+任务2. 考虑某些图像标准化后整体偏暗：有几个孤立像素点灰度特别大，标准化后压缩了整体的灰度范围，需要检测出来去除噪声点并插值替代（基于孤立亮点邻域像素灰度值陡降的特点设计检测算法，中值滤波）
+任务3. 计算图像块血管密度，以此基于血管密度的阈值筛选淘汰图像块
+任务4.划分数据集并加上标签
+
+
+思路：考虑PAM图像中已有很多不连通碎片化区域，所以不能使用形态学上的检测连通域面积的方法来去除孤立点，而要使用灰度阈值分割。（点检测：如果一个孤立的点（此点的灰度级与其背景的差异相当大并且它所在的位置是一个均匀或近似均匀的区域，与它周围的点很不同，则容易被这类点检测）
+
+图像识别去除孤立点方法
+http://www.voidcn.com/article/p-qdfenjtb-bme.html
+Python之图像处理 ——小点的去除
+https://blog.csdn.net/qq_33540705/article/details/91633292
+OPENCV二值化图像内孔洞填充/小区域去除
+https://blog.csdn.net/yansmile1/article/details/46761271
+离群点（孤立点）检测
+https://blog.csdn.net/sinat_27421407/article/details/78860293
+图像分割——孤立点检测（Matlab）
+https://blog.csdn.net/lengo/article/details/100565658
+
+【python】数字图像处理：高级形态学处理 阈值分割+闭运算+连通区域标记+删除小区块+分色显示
+https://blog.csdn.net/yzxnuaa/article/details/79671931
+
+skikit-image Module: morphology
+https://scikit-image.org/docs/dev/api/skimage.morphology.html#skimage.morphology.remove_small_objects
+
+10.17 其余均完成，尚待预处理完成图像裁剪与配准。
+
+10.19 归一化互相关(Normalized Cross Correlation method, NCC)匹配算法是一种经典的统计匹配算法，通过计算模板图像和匹配图像的互相关值，来确定匹配的程度。
+归一化互相关应用在对图像特征点进行初始匹配时执行步骤大体为：
+
+(1)、原图像 - 测试图像经过平均平滑滤波的图像；
+
+(2)、利用(1)中的结果，产生归一化互相关矩阵；
+
+(3)、根据产生的归一化互相关矩阵，得出每行、每列(每幅图像中一点相对于另一幅图像中所有对应点)的最大值及相应索引；
+
+(4)、由(3)结果，如两图像对应点索引一致，则为一对初始匹配点对；
+
+(5)、由(4)循环求出一一匹配的点对。
+
+ 初始匹配完成。
+
+基于灰度的匹配：NCC
+https://blog.csdn.net/qq_32261049/article/details/78666654
+https://blog.csdn.net/u013049912/article/details/85984238
+https://zhuanlan.zhihu.com/p/80985475
+https://blog.csdn.net/weixin_42104289/article/details/83088043
+https://blog.csdn.net/qq_38898129/article/details/93074387
+
+图像匹配指在已知目标基准图的子图集合中，寻找与实时图像最相似的子图，以达到目标识别与定位目的的图像技术。主要方法有：基于图像灰度相关方法、基于图像特征方法、基于神经网络相关的人工智能方法(还在完善中)。基于图像灰度的匹配算法简单，匹配准确度高，主要用空间域的一维或二维滑动模版进行图像匹配，不同的算法区别主要体现在模版及相关准则的选择方面，但计算量大，不利于实时处理，对灰度变化、旋转、形变以及遮挡等比较敏感；基于图像特征的方法计算量相对较小，对灰度变化、形变及遮挡有较好的适应性，通过在原始图中提取点、线、区域等显著特征作为匹配基元，进而用于特征匹配，但是匹配精度不高。
+通常又把基于灰度的匹配算法，称作相关匹配算法。相关匹配算法又分为两类：一类强调景物之间的差别程度如平均差法(SD)和平均绝对差值法(MAD)等;另一类强调景物之间的相似程度,主要算法又分成两类,一是积相关匹配法,二是相关系数法。今天我们就来说说归一化互相关系数法（NCC).
+
+NCC编程结果: optimal coordinate of the top-left point of AR: 177 100
+
+基于特征的图像对齐
+在一个图像中检测到一组特征点，并与另一张图像中的特征点相匹配。然后根据这些匹配的特征点计算出一个转换规则，从而将一个图像映射到另一个图像上。图像对齐(或者图像配准)可以扭曲旋转（其实是仿射变换）一张图使它和另一个图可以很完美的对齐。 
+https://blog.csdn.net/yuanlulu/article/details/82222119
+https://blog.csdn.net/qq_38554218/article/details/83031839
+https://blog.csdn.net/lyxleft/article/details/89476175
+
+10.23晚： 基于SSIM，设置阈值将匹配后的AR/OR第3对图像（尺寸为1823*1900）中由于形变而致血管分布未配准的图像块置0（恰好是右上角3块区域），重新赋给AR/OR（10,2000,2000)的第3组。这样数据扩增，提取图像块时，在基于血管密度的筛选环节能过滤掉第3组数据扩增的144对图像中置0的图像块和全0的区域（匹配裁剪后的空余部分）。
+10.24晚 发现如果简单地筛选出右上角3块区域并置0，这样整幅图（1823*1900）在5种变换组合下扩增的图像会非常奇怪（有裂口），非常不适合后期提取图像块，于是简单粗暴地裁剪为（(1823-256）*1900）
+又发现函数cv2.getRotationMatrix2D在进行非方阵的旋转会出错，坐标不匹配
+
+干脆裁剪AR/OR_3为中间大小为（1567，1567）的图像块，overlap=70，这样可以提取8*8=64个图像块
+至此，利用图像配准处理有错位和细微形变的第3对图像，充分利用数据的事情就已经做完，数据集已经备妥，等待焕浩训练，自己也应该多看看super-resolution相关的文献。

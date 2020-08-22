@@ -1,0 +1,1459 @@
+#zero-mean normalization
+#ARPAM_npy, ORPAM_npy = ARPAM_npy.reshape(-1,1), ORPAM_npy.reshape(-1,1)
+#ARPAM_npy = (ARPAM_npy - np.mean(ARPAM_npy)) / np.std(ARPAM_npy)
+#ORPAM_npy = (ORPAM_npy - np.mean(ORPAM_npy)) / np.std(ORPAM_npy)
+#ARPAM_npy, ORPAM_npy = ARPAM_npy.reshape(rows, cols), ORPAM_npy.reshape(rows, cols)
+
+rows, cols = img.shape
+img_max, img_min = np.amax(img.reshape(-1,1)), np.amin(img.reshape(-1,1))
+img_norm = 255 * np.rint((img.reshape(-1,1) - img_min) / (img_max - img_min))
+img_norm = img_norm.reshape(rows, cols)
+img_norm = img_norm.astype(np.uint8)
+# Drawing two PAM images
+
+#plt.figure
+#plt.tight_layout()
+#plt.subplot(1,2,1)
+#plt.imshow(ARPAM_npy)
+#plt.axis('off')
+#plt.title('ARPAM')
+#plt.subplot(1,2,2)
+#plt.imshow(ORPAM_npy)
+#plt.axis('off')
+#plt.title('ORPAM')
+#plt.show()
+# Transforms for data augmentation
+
+#ORPAM_flip0 = Flip(ORPAM_npy, 0, 1) 
+#ORPAM_flip1 = Flip(ORPAM_npy, 1, 1)
+#ORPAM_flip2 = Flip(ORPAM_npy, 2, 1)
+#plt.figure
+#plt.tight_layout()
+#plt.subplot(2,2,1)
+#plt.imshow(ORPAM_npy)
+#plt.axis('off')
+#plt.title('origial ORPAM')
+#plt.subplot(2,2,2)
+#plt.imshow(ORPAM_flip0)
+#plt.axis('off')
+#plt.title('vertical flipping')
+#plt.subplot(2,2,3)
+#plt.imshow(ORPAM_flip1)
+#plt.axis('off')
+#plt.title('horizontal flipping')
+#plt.subplot(2,2,4)
+#plt.imshow(ORPAM_flip2)
+#plt.axis('off')
+#plt.title('diagonal flipping')
+#plt.show()
+
+#ORPAM_rot0 = Rotation(ORPAM_npy, 0) 
+#ORPAM_rot90 = Rotation(ORPAM_npy, 90)
+#ORPAM_rot180= Rotation(ORPAM_npy, 180)
+#ORPAM_rot270= Rotation(ORPAM_npy, 270)
+
+#plt.figure
+#plt.tight_layout()
+#plt.subplot(2,2,1)
+#plt.imshow(ORPAM_rot0)
+#plt.axis('off')
+#plt.title('origial ORPAM')
+#plt.subplot(2,2,2)
+#plt.imshow(ORPAM_rot90)
+#plt.axis('off')
+#plt.title('rotation 90')
+#plt.subplot(2,2,3)
+#plt.imshow(ORPAM_rot180)
+#plt.axis('off')
+#plt.title('rotation 180')
+#plt.subplot(2,2,4)
+#plt.imshow(ORPAM_rot270)
+#plt.axis('off')
+#plt.title('rotation 270')
+#plt.show()
+
+ARPAM_ela1 = Elastic_Deformation(AR_npy[6], alpha=34, sigma=6, seed = 50)
+ORPAM_ela1 = Elastic_Deformation(OR_npy[6], alpha=34, sigma=6, seed = 50)
+ARPAM_ela2 = Elastic_Deformation(AR_npy[6], alpha=4, sigma=8, seed = 60)
+ORPAM_ela2 = Elastic_Deformation(OR_npy[6], alpha=4, sigma=8, seed = 60)
+
+plt.figure
+plt.tight_layout()
+plt.subplot(3,2,1)
+plt.imshow(AR_npy[6])
+plt.title('origial ARPAM')
+plt.axis('off')
+plt.subplot(3,2,2)
+plt.imshow(OR_npy[6])
+plt.title('origial ORPAM')
+plt.axis('off')
+plt.subplot(3,2,3)
+plt.imshow(ARPAM_ela1)
+plt.title('elasticity coefficient=6')
+plt.axis('off')
+plt.subplot(3,2,4)
+plt.imshow(ORPAM_ela1)
+plt.title('elasticity coefficient=6')
+plt.axis('off')
+plt.subplot(3,2,5)
+plt.imshow(ARPAM_ela2)
+plt.title('elasticity coefficient=8')
+plt.axis('off')
+plt.subplot(3,2,6)
+plt.imshow(ORPAM_ela2)
+plt.title('elasticity coefficient=8')
+plt.axis('off')
+plt.show()
+
+
+#mnist = mpimg.imread('../mnist.png')
+#mnist_ela = Elastic_Deformation(mnist, alpha=34, sigma=6, pad_size=4)
+#print(mnist_ela-mnist)
+#plt.figure
+#plt.tight_layout()
+#plt.subplot(1,2,1)
+#plt.imshow(mnist)
+#plt.axis('off')
+#plt.subplot(1,2,2)
+#plt.imshow(mnist_ela)
+#plt.axis('off')
+#plt.show()
+
+
+#ARPAM_crop_pad, ORPAM_crop_pad = Crop_Pad(ARPAM_npy, 4), Crop_Pad(ORPAM_npy, 4)
+#ARPAM_crop_pad1, ARPAM_crop_pad2, ARPAM_crop_pad3, ARPAM_crop_pad4 = Crop_Pad(ARPAM_npy, 1), Crop_Pad(ARPAM_npy, 2), Crop_Pad(ARPAM_npy, 3), Crop_Pad(ARPAM_npy, 4)
+
+#plt.figure
+#plt.tight_layout()
+#plt.subplot(1,4,1)
+#plt.imshow(ARPAM_crop_pad1)
+#plt.title('left top')
+#plt.axis('off')
+#plt.subplot(1,4,2)
+#plt.imshow(ARPAM_crop_pad2)
+#plt.title('left bottom')
+#plt.axis('off')
+#plt.subplot(1,4,3)
+#plt.imshow(ARPAM_crop_pad3)
+#plt.title('right top')
+#plt.axis('off')
+#plt.subplot(1,4,4)
+#plt.imshow(ARPAM_crop_pad4)
+#plt.title('right bottom')
+#plt.axis('off')
+#plt.show()
+
+#print(np.mean(ARPAM_npy.reshape(-1,1)), np.mean(ORPAM_npy.reshape(-1,1)))
+ARPAM_gaus_noise, ORPAM_gaus_noise = Add_Gaussian_Noise(ARPAM_npy, std=0.01), Add_Gaussian_Noise(ORPAM_npy, std=0.01)
+
+#plt.figure
+#plt.tight_layout()
+#plt.subplot(2,2,1)
+#plt.imshow(ARPAM_npy)
+#plt.axis('off')
+#plt.subplot(2,2,2)
+#plt.imshow(ORPAM_npy)
+#plt.axis('off')
+#plt.subplot(2,2,3)
+#plt.imshow(ARPAM_gaus_noise)
+#plt.axis('off')
+#plt.subplot(2,2,4)
+#plt.imshow(ORPAM_gaus_noise)
+#plt.axis('off')
+#plt.show()
+
+#ARPAM_gamma, ORPAM_gamma = Gray_Transform(ARPAM_npy, 0.8), Gray_Transform(ORPAM_npy, 0.8)
+
+#plt.figure
+#plt.tight_layout()
+#plt.subplot(2,3,1)
+#plt.imshow(ARPAM_npy)
+#plt.title('ARPAM')
+#plt.axis('off')
+#plt.subplot(2,3,2)
+#plt.imshow(ARPAM_gamma)
+#plt.title('Gamma transform')
+#plt.axis('off')
+#plt.subplot(2,3,3)
+#plt.imshow(ARPAM_gaus_noise)
+#plt.title('Add Gaussian noise')
+#plt.axis('off')
+#plt.subplot(2,3,4)
+#plt.imshow(ORPAM_npy)
+#plt.title('ORPAM')
+#plt.axis('off')
+#plt.subplot(2,3,5)
+#plt.imshow(ORPAM_gamma)
+#plt.title('Gamma transform')
+#plt.axis('off')
+#plt.subplot(2,3,6)
+#plt.imshow(ORPAM_gaus_noise)
+#plt.title('Add Gaussian noise')
+#plt.axis('off')
+#plt.show()
+
+#ARPAM_patch_size = Extract_Patch(ORPAM_npy, (200,200))
+#print(ARPAM_patch_size)
+
+plt.figure
+plt.tight_layout()
+for i in range(7):
+    plt.subplot(2,7,i+1)
+    plt.imshow(AR_npy[i])
+    plt.axis('off')
+    plt.title('ARPAM')
+for i in range(7):
+    plt.subplot(2,7,i+8)
+    plt.imshow(OR_npy[i])
+    plt.axis('off')
+    plt.title('ORPAM')
+for i in range(7):
+    print(AR_npy[i]-OR_npy[i])
+plt.show()
+
+
+AR_gamma = AR_npy
+OR_gamma = OR_npy
+
+
+plt.figure
+plt.tight_layout()
+for i in range(7):
+    plt.subplot(4,7,i+1)
+    plt.imshow(AR_npy[i])
+    plt.axis('off')
+    plt.title('ARPAM')
+for i in range(7):
+    plt.subplot(4,7,i+8)
+    AR_gamma[i] = Gamma_Transform(AR_npy[i], 0.8)
+    plt.imshow(AR_gamma[i])
+    plt.axis('off')
+    plt.title('GAMMA=0.8')
+for i in range(7):
+    plt.subplot(4,7,i+15)
+    plt.imshow(OR_npy[i])
+    plt.axis('off')
+    plt.title('ORPAM')
+for i in range(7):
+    plt.subplot(4,7,i+22)
+    OR_gamma[i] = Gamma_Transform(OR_npy[i], 0.8)
+    plt.imshow(OR_gamma[i])
+    plt.axis('off')
+    plt.title('GAMMA=0.8')
+plt.show()
+
+AR_aug =  np.load('../Data_aug/AR_aug.npy') #(7,144,2000,2000)
+OR_aug =  np.load('../Data_aug/OR_aug.npy') #(7,144,2000,2000)
+plt.figure
+plt.tight_layout()
+plt.subplot(2,3,1)
+plt.imshow(AR_aug[6,143,:,:])
+plt.axis('off')
+plt.subplot(2,3,2)
+plt.imshow(AR_aug[6,100,:,:])
+plt.axis('off')
+plt.subplot(2,3,3)
+plt.imshow(AR_aug[5,100,:,:])
+plt.axis('off')
+plt.subplot(2,3,4)
+plt.imshow(OR_aug[6,143,:,:])
+plt.axis('off')
+plt.subplot(2,3,5)
+plt.imshow(OR_aug[6,100,:,:])
+plt.axis('off')
+plt.subplot(2,3,6)
+plt.imshow(OR_aug[5,100,:,:])
+plt.axis('off')
+plt.show()
+
+
+for i in range(4):
+    for j in range(3):
+        for k in range(3):
+            for m in range(2):
+                for n in range(2):
+                    parms = {'flip_option':i, 'rot_option':j, 
+                                'ela_parm':{'sigma':6, 'seed':10*(k-1)+50}, 'gamma_option':m, 'noise_option':n}
+                    for key, value in parms.items():
+                        print(key, ':',  value)
+print(np.amin(AR_npy[6]))
+AR = Add_Gaussian_Noise(Gamma_Transform(Elastic_Deformation(Rotation(Flip(AR_npy[6], 
+                      parms[method]['flip_option']), parms[method]['rot_option']), parms[method]['ela_parm']['sigma'],
+                       parms[method]['ela_parm']['seed']), parms[method]['gamma_option']), parms[method]['noise_option'])
+
+print(AR)
+plt.figure
+plt.imshow(AR)
+plt.show()
+
+np.save('../Data_aug/AR_aug.npy', AR_aug) 
+np.save('../Data_aug/OR_aug.npy', OR_aug) 
+
+# Read the augmented data
+
+def Extract_Patch(img, patch_size):
+    """
+    img: ndarray
+    patch_size: touple, size of image patch 
+    """
+    patch_num = img.shape[0]//patch_size[0] * img.shape[1]//patch_size[1]
+    image_patch = []
+    for i in np.arange(img.shape[0]//patch_size[0]):
+        for j in np.arange(img.shape[1]//patch_size[1]):
+            image_patch.append(img[i*patch_size[0]:(i+1)*patch_size[0],
+                                   j*patch_size[1]:(j+1)*patch_size[1]])
+    image_patch = np.array(image_patch)
+    for i in np.arange(image_patch.shape[0]):
+        export_name = '../OR_image_patch/'+'patch_'+str(i+1)+ '.png'
+        mpimg.imsave(export_name, image_patch[i])
+    return image_patch.shape
+
+# Training set, validation set and test set
+ARPAM_mat = scipy.io.loadmat('../PAaror/AR_7.mat')
+ARPAM_npy = ARPAM_mat['C2']
+PatchSize = Extract_Patch(ARPAM_npy, (200,200))
+print(PatchSize)
+
+for i in range(7):
+    plt.figure
+    plt.tight_layout()
+    plt.imshow(AR_npy[i])
+    plt.axis('off')
+    plt.title('ARPAM')
+    plt.show()
+plt.show()
+for i in range(7):
+    plt.figure
+    plt.tight_layout()
+    plt.imshow(OR_npy[i])
+    plt.axis('off')
+    plt.title('ORPAM')
+    plt.show()
+
+ARPAM_mat, ORPAM_mat = scipy.io.loadmat('../PAaror/AR_7.mat'), scipy.io.loadmat('../PAaror/OR_7.mat')
+ARPAM_npy, ORPAM_npy = ARPAM_mat['C2'], ORPAM_mat['C1']
+
+AR_gamma, OR_gamma= AR_npy, OR_npy
+plt.figure
+plt.tight_layout()
+for i in range(7):
+    plt.subplot(4,7,i+1)
+    plt.imshow(AR_npy[i])
+    plt.axis('off')
+    plt.title('ARPAM')
+for i in range(7):
+    plt.subplot(4,7,i+8)
+    AR_gamma[i] = Gamma_Transform(AR_npy[i], 0.6)
+    plt.imshow(AR_gamma[i])
+    plt.axis('off')
+    plt.title('GAMMA=0.6')
+for i in range(7):
+    plt.subplot(4,7,i+15)
+    plt.imshow(OR_npy[i])
+    plt.axis('off')
+    plt.title('ORPAM')
+for i in range(7):
+    plt.subplot(4,7,i+22)
+    OR_gamma[i] = Gamma_Transform(OR_npy[i], 0.6)
+    plt.imshow(OR_gamma[i])
+    plt.axis('off')
+    plt.title('GAMMA=0.6')
+plt.show()
+
+N_points = 100000
+n_bins = 20
+
+# Generate a normal distribution, center at x=0 and y=5
+x = np.random.randn(N_points)
+y = .4 * x + np.random.randn(100000) + 5
+
+fig, axs = plt.subplots(1, 2, sharey=True, tight_layout=True)
+
+# We can set the number of bins with the `bins` kwarg
+axs[0].hist(x, bins=n_bins)
+axs[1].hist(y, bins=n_bins)
+plt.show()
+
+
+    gamma = 0.8
+    img_gamma = np.rint(np.power(img_norm, gamma))
+    img_gamma[img_gamma < 0] = 0
+    img_gamma[img_gamma > 255] = 255
+    img_gamean = np.mean(img_gamma.reshape(-1,1))
+    img_gamma = img_gamma.astype(np.uint8)
+
+
+plt.cm.gray,interpolation='nearest'
+    R = (255 * img_remove).astype(np.uint8)
+    G = B = np.zeros((img_remove.shape), np.uint8)
+    img_seg = np.zeros((rows,cols,3), np.uint8)
+    img_seg[:,:,0], img_seg[:,:,1], img_seg[:,:,2] = R, G, B # RGB channel order
+
+    # vessel segmentation result
+    img_normRGBA = Image.convert('RGBA')
+    img_segRGBA = img_seg.convert('RGBA')
+    img_segRe = Image.blend(img_normRGBA, img_segRGBA, 0.3)
+    np.zeros((rows,cols,3), np.uint8)    
+    img_seg[img_remove==True, 0] = 255
+    img_seg[:,:,1] = img_norm
+    img_seg[:,:,2] = img_norm
+    img_segRGB = np.zeros((rows,cols,3), np.uint8)
+    img_segRGB[img_remove == True, 0] = 255
+    img_segRGB[:,:,1] = img_seg
+    img_segRGB[:,:,2] = img_seg
+    img_seg = img_norm.copy() #deep copy
+    img_seg[img_remove == True] = 255
+
+
+plt.figure
+plt.tight_layout()
+plt.subplot(2,2,1)
+plt.imshow(AR_norm)
+plt.axis('off')
+plt.subplot(2,2,2)
+plt.imshow(AR_denoise)
+plt.axis('off')
+plt.subplot(2,2,3)
+plt.imshow(OR_norm)
+plt.axis('off')
+plt.subplot(2,2,4)
+plt.imshow(OR_denoise)
+plt.axis('off')
+plt.show()
+
+#plt.figure
+#plt.subplot(121), plt.hist(AR_norm.flatten(), bins=256)
+#plt.title("AR_Histogram")
+#plt.subplot(122), plt.hist(OR_norm.flatten(), bins=256)
+#plt.title("OR_Histogram")
+#plt.show()
+
+scipy.io.savemat('AR_seg.mat',{'AR_seg':AR_seg})
+scipy.io.savemat('OR_seg.mat',{'OR_seg':OR_seg})
+
+##编写一个函数来生成原始二值图像
+#def microstructure(l=256):
+#    n = 5
+#    x, y = np.ogrid[0:l, 0:l]  #生成网络x(256, 1)和y(1,256)
+#    mask = np.zeros((l, l))
+#    generator = np.random.RandomState(1)  #随机数种子
+#    points = l * generator.rand(2, n**2) #值为[0,255]之间，尺寸(2,25)
+#    mask[(points[0]).astype(np.int), (points[1]).astype(np.int)] = 1 #在掩膜上挑选25个随机点赋值1
+#    mask = ndi.gaussian_filter(mask, sigma=l/(4.*n)) #高斯滤波
+#    return mask > mask.mean()
+ 
+#data = microstructure(l=128) #生成测试图片
+ 
+#dst=morphology.remove_small_objects(data,min_size=300,connectivity=1)
+ 
+#fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(8, 4))
+#ax1.imshow(data, plt.cm.gray, interpolation='nearest')
+#ax2.imshow(dst,plt.cm.gray,interpolation='nearest')
+ 
+#fig.tight_layout()
+#plt.show()
+
+
+arr = [1,2,3,4,5,6]
+#求均值
+arr_mean = np.mean(arr)
+#求方差
+arr_var = np.var(arr)
+#求标准差
+arr_std = np.std(arr,ddof=1)
+print("平均值为：%f" % arr_mean)
+print("方差为：%f" % arr_var)
+print("标准差为:%f" % arr_std)
+
+import scipy.ndimage as ndi
+from skimage import morphology
+
+## Divide into training/val/test set 
+#AR_train = np.ndarray(shape=(7*144*90,200,200), dtype=np.float16)
+#OR_train = np.ndarray(shape=(7*144*90,200,200), dtype=np.float16)
+#AR_val = np.ndarray(shape=(7*144*5,200,200), dtype=np.float16)
+#OR_val = np.ndarray(shape=(7*144*5,200,200), dtype=np.float16)
+#AR_test = np.ndarray(shape=(7*144*5,200,200), dtype=np.float16)
+#OR_test = np.ndarray(shape=(7*144*5,200,200), dtype=np.float16)
+
+#patch_size = (200,200)
+#x = 0
+#for i in range(7):
+#    for j in range(144):
+#        rand_row = np.random.randint(0,10)
+#        AR_data = Extract_Patch(AR_aug[i,j,:,:], patch_size, rand_row)
+#        AR_train[x*90:(x+1)*90,:,:], AR_val[x*5:(x+1)*5,:,:], \
+#                          AR_test[x*5:(x+1)*5,:,:] = AR_data[0], AR_data[1], AR_data[2]
+#        OR_data = Extract_Patch(OR_aug[i,j,:,:], patch_size, rand_row)
+#        OR_train[x*90:(x+1)*90,:,:], OR_val[x*5:(x+1)*5,:,:], \
+#                          OR_test[x*5:(x+1)*5,:,:] = OR_data[0], OR_data[1], OR_data[2]
+#        x += 1
+
+#for i in range(5040):
+#    export_AR = '../AR_test/'+'patch_'+str(i+1)+ '.png'
+#    export_OR = '../OR_test/'+'patch_'+str(i+1)+ '.png'
+#    mpimg.imsave(export_AR, AR_test[i])
+#    mpimg.imsave(export_OR, OR_test[i])
+#np.save('../Data_aug/AR_train.npy', AR_train)
+#np.save('../Data_aug/AR_val.npy', AR_val)
+#np.save('../Data_aug/AR_test.npy', AR_test)
+#np.save('../Data_aug/OR_train.npy', OR_train)
+#np.save('../Data_aug/OR_val.npy', OR_val)
+#np.save('../Data_aug/OR_test.npy', OR_test)
+
+
+#Image patch extraction
+def Extract_Patch(img, patch_size, rand_row):
+    """
+    img: ndarray
+    patch_size: touple, size of image patch 
+    """
+    patch_num = img.shape[0]//patch_size[0] * img.shape[1]//patch_size[1]
+    TrainSet, ValSet, TestSet = [], [], []
+    for i in range(img.shape[0]//patch_size[0]):
+        for j in range(img.shape[1]//patch_size[1]):
+            if (i == rand_row ): 
+                if (j % 2) == 0:   # patches from one random row and its even-numbered columns => Val set
+                    ValSet.append(img[i*patch_size[0]:(i+1)*patch_size[0],
+                                       j*patch_size[1]:(j+1)*patch_size[1]])
+                else: # patches from one random row and its odd-numbered columns => Test set
+                    TestSet.append(img[i*patch_size[0]:(i+1)*patch_size[0],
+                                       j*patch_size[1]:(j+1)*patch_size[1]])
+            else:
+                TrainSet.append(img[i*patch_size[0]:(i+1)*patch_size[0],
+                                       j*patch_size[1]:(j+1)*patch_size[1]])
+
+    TrainSet, ValSet, TestSet = np.array(TrainSet), np.array(ValSet), np.array(TestSet) 
+    return TrainSet, ValSet, TestSet
+
+
+def Screening_Patch(img, patch_size):     
+    
+    # threshld segmentation
+    img = np.rint(255 * img).astype(np.uint8)
+    img_thr = cv2.adaptiveThreshold(img, 1, cv2.ADAPTIVE_THRESH_MEAN_C,
+                                                cv2.THRESH_BINARY, 201, -4)  # thresholding
+
+    # remove small connected areas less than min_size
+    img_remove = morphology.remove_small_objects(img_thr.astype(np.bool), min_size=10, connectivity=2)
+    img_remove = img_remove.astype(np.int) #binary image
+   
+    #calculate  vessel density
+    density_mean = np.mean(img_remove)
+    density_std = np.std(img_remove, ddof=1)
+    print('mean of vessel density:', density_mean)
+    print('std of vessel density:', density_std)
+
+    #Screeing image patch based on vessel density
+    ScreenPatch = []
+    patch_num = img.shape[0]//patch_size[0] * img.shape[1]//patch_size[1]
+    x = 0
+    for i in range(img.shape[0]//patch_size[0]):
+        for j in range(img.shape[1]//patch_size[1]):
+            #export_path1 = '../Vessel_densiy/image_patch/'+str(x+1)+'.png'
+            #mpimg.imsave(export_path1, img[i*patch_size[0]:(i+1)*patch_size[0],
+            #                           j*patch_size[1]:(j+1)*patch_size[1]])
+
+            density = np.mean(img_remove[i*patch_size[0]:(i+1)*patch_size[0],
+                                       j*patch_size[1]:(j+1)*patch_size[1]])
+            if density > density_mean/6: # threshold for screening
+                #export_path2 = '../Vessel_densiy/screening_patch/'+str(x+1)+'.png'
+                #mpimg.imsave(export_path2, img[i*patch_size[0]:(i+1)*patch_size[0],
+                #                       j*patch_size[1]:(j+1)*patch_size[1]])
+                ScreenPatch.append(img[i*patch_size[0]:(i+1)*patch_size[0],
+                                       j*patch_size[1]:(j+1)*patch_size[1]])
+            x += 1
+    return ScreenPatch.shape[0], np.array(ScreenPatch)
+
+#OR_patch = Screening_Patch(OR_denoise,(200,200))
+#print(OR_patch.shape)
+
+AR_screen = np.ndarray(shape=(7,144,100,200,200), dtype=np.float32)
+OR_screen = np.ndarray(shape=(7,144,100,200,200), dtype=np.float32)
+
+for i in range(7):
+    for j in range(144):
+        Num1, ScreenPatch1 = Screening_Patch(AR_aug[i,j,:,:],(200,200))
+        AR_screen[i,j,0:Num1-1,:,:] =  ScreenPatch1
+        Num2, ScreenPatch2 = Screening_Patch(OR_aug[i,j,:,:],(200,200))
+        OR_screen[i,j,0:Num2-1,:,:] =  ScreenPatch2
+
+OR_data = Extract_Patch(OR_aug[i,j,:,:], patch_size, rand_row)
+OR_train[x*90:(x+1)*90,:,:], OR_val[x*5:(x+1)*5,:,:], \
+                    OR_test[x*5:(x+1)*5,:,:] = OR_data[1], OR_data[2], OR_data[3]
+
+            if img_norm[i,j] > 0.5: # 直方图，多一层检测
+                img_denoise[i,j] = 0
+for i in range(10):
+    export_path1 = '../PAaror/AR_norm/'+str(i+1)+'.png'
+    mpimg.imsave(export_path1, AR_npy[i])
+    mat_name1 = 'AR_norm'+str(i+1)
+    scipy.io.savemat('../PAaror/AR_norm/'+str(i+1)+'.mat',{matname1:AR_npy[i]})
+
+    export_path2 = '../PAaror/OR_norm/'+str(i+1)+'.png'
+    mpimg.imsave(export_path2, OR_npy[i])
+    mat_name2 = 'OR_norm'+str(i+1)
+    scipy.io.savemat('../PAaror/OR_norm/'+str(i+1)+'.mat',{matname1:OR_npy[i]})
+
+    ## remove small connected area
+    #img_mask = img_norm.copy()
+    #img_mask = np.rint(255 * img_mask).astype(np.uint8)
+    #img_thr = img_thr = cv2.adaptiveThreshold(img_mask, 1, cv2.ADAPTIVE_THRESH_MEAN_C,
+    #                                            cv2.THRESH_BINARY, 201, -4)  #Otsu thresholding
+    #img_remove = morphology.remove_small_objects(img_thr.astype(np.bool), min_size=100, connectivity=2)
+    #plt.figure
+    #plt.imshow(img_remove.astype(np.int))
+    #plt.show()
+    #img_denoise *= (img_remove!=False)
+
+#Image patch extraction based on vessel density sceening result
+def Extract_Patch(img, patch_size, rand_row):
+    """
+    img: ndarray
+    patch_size: touple, size of image patch 
+    """
+    # threshld segmentation
+    img_uint8 = img.copy()
+    img_uint8 = np.rint(255 * img_uint8).astype(np.uint8)
+    img_thr = cv2.adaptiveThreshold(img_uint8, 1, cv2.ADAPTIVE_THRESH_MEAN_C,
+                                                cv2.THRESH_BINARY, 201, -4)  # thresholding
+
+    # remove small connected areas less than min_size
+    img_remove = morphology.remove_small_objects(img_thr.astype(np.bool), min_size=10, connectivity=2)
+    img_remove = img_remove.astype(np.int) #binary image
+   
+    #calculate  vessel density
+    density_mean = np.mean(img_remove)
+    density_std = np.std(img_remove, ddof=1)
+    f.write ("mean of vessel density is: " + str(density_mean) + '\n')
+    f.flush()
+
+    #extract image patch given vessel density
+    patch_num = img.shape[0]//patch_size[0] * img.shape[1]//patch_size[1]
+    TrainSet, ValSet, TestSet = [], [], []
+    for i in range(img.shape[0]//patch_size[0]):
+        for j in range(img.shape[1]//patch_size[1]):
+            density = np.mean(img_remove[i*patch_size[0]:(i+1)*patch_size[0],
+                                       j*patch_size[1]:(j+1)*patch_size[1]])
+            if density < density_mean/6: # threshold for screening
+                continue
+            else:
+                if (i == rand_row ): 
+                    if (j % 2) == 0:   # patches from one random row and its even-numbered columns => Val set
+                        ValSet.append(img[i*patch_size[0]:(i+1)*patch_size[0],
+                                            j*patch_size[1]:(j+1)*patch_size[1]])
+                    else: # patches from one random row and its odd-numbered columns => Test set
+                        TestSet.append(img[i*patch_size[0]:(i+1)*patch_size[0],
+                                            j*patch_size[1]:(j+1)*patch_size[1]])
+                else:
+                    TrainSet.append(img[i*patch_size[0]:(i+1)*patch_size[0],
+                                            j*patch_size[1]:(j+1)*patch_size[1]])
+
+    TrainSet, ValSet, TestSet = np.array(TrainSet), np.array(ValSet), np.array(TestSet)
+    set_len = [len(TrainSet),len(ValSet),len(TestSet)]
+    len_str =','.join(str(e) for e in set_len)
+    f.write("length of train/val/test: " + len_str + '\n')
+    f.flush()
+
+    return set_len, TrainSet, ValSet, TestSet
+
+
+
+## Divide into training/val/test set 
+#def Divide_Dataset(Aug_data):
+#    train_set = np.zeros(shape=(7*144*90,200,200), dtype=np.float16)
+#    train_label = np.zeros(shape=(7,144,1), dtype=np.uint8)
+#    val_set = np.zeros(shape=(7*144*5,200,200), dtype=np.float16)
+#    val_label = np.zeros(shape=(7,144,1,1), dtype=np.uint8)
+#    test_set = np.zeros(shape=(7*144*5,200,200), dtype=np.float16)
+#    test_label = np.zeros(shape=(7,144,1,1), dtype=np.uint8)
+
+#    train_sum, val_sum, test_sum = 0, 0, 0
+#    for i in range(7):
+#        for j in range(144):
+#            f.write(str(i+1) + '|' + str(j+1) + '\n')
+#            f.flush()
+#            rand_row = np.random.randint(0,10)
+#            mixed_data = Extract_Patch(Aug_data[i,j,:,:],(200,200), rand_row)
+#            train_len, val_len, test_len = mixed_data[0][0], mixed_data[0][1], mixed_data[0][2]
+#            train_sum += train_len
+#            val_sum += val_len
+#            test_sum += test_len
+
+#            train_set[train_sum-train_len:train_sum,:,:], val_set[val_sum-val_len:val_sum,:,:], \
+#               test_set[test_sum-test_len:test_sum,:,:] = mixed_data[1], mixed_data[2], mixed_data[3]
+#            val_label[i,j,0,:], test_label[i,j,0,:] = rand_row, rand_row
+#            train_label[i,j,0], val_label[i,j,:,0], test_label[i,j,:,0] =  \
+#               mixed_data[0][0], mixed_data[0][1], mixed_data[0][2]
+
+#    set_sum = [train_sum,val_sum,test_sum]
+#    sum_str =','.join(str(e) for e in set_sum)
+#    f.write("sum of length of train/val/test: " + sum_str + '\n')
+#    f.flush()
+#    return set_sum,train_set,train_label,val_set,val_label,test_set,test_label
+
+#AR_set_sum, OR_set_sum = [],[]
+#AR_train = np.zeros(shape=(7*144*90,200,200), dtype=np.float32)
+#AR_train_label = np.zeros(shape=(7,144,1), dtype=np.uint8)
+#OR_train = np.zeros(shape=(7*144*90,200,200), dtype=np.float32)
+#OR_train_label = np.zeros(shape=(7,144,1), dtype=np.uint8)
+
+#AR_val = np.zeros(shape=(7*144*5,200,200), dtype=np.float32)
+#AR_val_label = np.zeros(shape=(7,144,1,1), dtype=np.uint8)
+#OR_val = np.zeros(shape=(7*144*5,200,200), dtype=np.float32)
+#OR_val_label = np.zeros(shape=(7,144,1,1), dtype=np.uint8)
+
+#AR_test = np.zeros(shape=(7*144*5,200,200), dtype=np.float32)
+#AR_test_label = np.zeros(shape=(7,144,1,1), dtype=np.uint8)
+#OR_test = np.zeros(shape=(7*144*5,200,200), dtype=np.float32)
+#OR_test_label = np.zeros(shape=(7,144,1,1), dtype=np.uint8)
+
+#f.write("AR: Divide into training/val/test set" + '\n')
+#f.flush()
+#AR_set_sum,AR_train,AR_train_label,AR_val,AR_val_label,AR_test,AR_test_label = Divide_Dataset(AR_aug)
+#f.write("OR: Divide into training/val/test set" + '\n')
+#f.flush()
+#OR_set_sum,OR_train,OR_train_label,OR_val,OR_val_label,OR_test,OR_test_label = Divide_Dataset(OR_aug)
+
+
+## Save tain/val/test set 
+#np.save('../Data_aug/AR_train.npy', AR_train)
+#np.save('../Data_aug/AR_train_label.npy', AR_train_label)
+#np.save('../Data_aug/OR_train.npy', OR_train)
+#np.save('../Data_aug/OR_train_label.npy', OR_train_label)
+
+#np.save('../Data_aug/AR_val.npy', AR_val)
+#np.save('../Data_aug/AR_val_label.npy', AR_val_label)
+#np.save('../Data_aug/OR_val.npy', OR_val)
+#np.save('../Data_aug/OR_val_label.npy', OR_val_label)
+
+#np.save('../Data_aug/AR_test.npy', AR_test)
+#np.save('../Data_aug/AR_test_label.npy', AR_test_label)
+#np.save('../Data_aug/OR_test.npy', OR_test)
+#np.save('../Data_aug/OR_test_label.npy', OR_test_label)
+
+#f.write("All training/val/test set saved!")
+#f.flush()
+#f.close()
+
+#OR_denoise = np.power(OR_denoise, 0.8) # Gamma transform
+#OR_denoise[OR_denoise>1] = 1
+
+
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.image as mpimg
+import scipy.io
+import cv2 
+from scipy.ndimage.interpolation import map_coordinates
+from scipy.ndimage.filters import gaussian_filter
+
+OR = cv2.imread('../PAaror/OR_denoise/2.png')
+OR =  cv2.cvtColor(OR, cv2.COLOR_RGB2GRAY)
+
+def elastic_deformation(img, sigma, seed):
+    """
+    img: ndarray
+    alpha: scaling factor to control the deformation intensity
+    sigma: elasticity coefficient
+    seed: random integer from 1 to 100
+    """  
+    if seed > 40:
+        alpha = 34
+        random_state = np.random.RandomState(seed) 
+        #image = np.pad(img, pad_size, mode="symmetric")
+        center_square, square_size = np.float32(img.shape)//2, min(img.shape)//3
+
+        pts1 = np.float32([center_square + square_size, [center_square[0] + square_size, center_square[1] - square_size],
+                           center_square - square_size])
+        pts2 = pts1 + random_state.uniform(-img.shape[1]*0.08, img.shape[1]*0.08, size=pts1.shape).astype(np.float32)
+        m = cv2.getAffineTransform(pts1,pts2)
+        image = cv2.warpAffine(img, m, img.shape,  borderMode=cv2.BORDER_REFLECT_101) #random affine transform
+
+        #generate random displacement fields by gaussian conv
+        dx = dy = gaussian_filter((random_state.rand(*image.shape)*2 - 1),
+                             sigma, mode="constant", cval=0) * alpha 
+        x, y =np.meshgrid(np.arange(image.shape[1]), np.arange(image.shape[0])) #grid coordinate matrix
+        indices = np.reshape(y+dy, (-1, 1)), np.reshape(x+dx, (-1, 1))
+        img_ela = map_coordinates(image, indices, order=1).reshape(*image.shape) #preform bilinear interpolation
+    else:
+        img_ela = img
+    return img_ela
+
+
+def test(img1,img2,patchH, patchW):     
+    
+    patch_num = img2.shape[0]//patchH * img2.shape[1]//patchW
+
+    for i in range(img2.shape[0]//patchH):
+        for j in range(img2.shape[1]//patchW):
+
+            img1[i*patchH:(i+1)*patchH, j*patchW:(j+1)*patchW] = \
+                            elastic_deformation(img2[i*patchH:(i+1)*patchH, j*patchW:(j+1)*patchW],6,50)         
+    return img1
+
+OR_ela1 = np.zeros(OR.shape,dtype=np.float32)
+
+OR_ela1 = test(OR_ela1,OR,200,200)
+OR_ela2 = elastic_deformation(OR, 6, 50)
+
+plt.figure
+plt.tight_layout()
+plt.subplot(1,3,1)
+plt.imshow(OR)
+plt.axis('off')
+plt.title('original')
+plt.subplot(1,3,2)
+plt.imshow(OR_ela1)
+plt.axis('off')
+plt.title('regional ela')
+plt.subplot(1,3,3)
+plt.imshow(OR_ela2)
+plt.axis('off')
+plt.title('whole ela')
+plt.show()
+
+
+def extract_grayscale_patches( img, shape, offset=(0,0), stride=(1,1) ):
+    """Extracts (typically) overlapping regular patches from a grayscale image
+
+    Changing the offset and stride parameters will result in images
+    reconstructed by reconstruct_from_grayscale_patches having different
+    dimensions! Callers should pad and unpad as necessary!
+
+    Args:
+        img (HxW ndarray): input image from which to extract patches
+
+        shape (2-element arraylike): shape of that patches as (h,w)
+
+        offset (2-element arraylike): offset of the initial point as (y,x)
+
+        stride (2-element arraylike): vertical and horizontal strides
+
+    Returns:
+        patches (ndarray): output image patches as (N,shape[0],shape[1]) array
+
+        origin (2-tuple): array of top and array of left coordinates
+    """
+    px, py = np.meshgrid( np.arange(shape[1]),np.arange(shape[0]))
+    l, t = np.meshgrid(
+        np.arange(offset[1],img.shape[1]-shape[1]+1,stride[1]),
+        np.arange(offset[0],img.shape[0]-shape[0]+1,stride[0]) )
+    l = l.ravel()
+    t = t.ravel()
+    x = np.tile( px[None,:,:], (t.size,1,1)) + np.tile( l[:,None,None], (1,shape[0],shape[1]))
+    y = np.tile( py[None,:,:], (t.size,1,1)) + np.tile( t[:,None,None], (1,shape[0],shape[1]))
+    return img[y.ravel(),x.ravel()].reshape((t.size,shape[0],shape[1])), (t,l)
+
+A = [x for x in range(1,101)]
+A = np.array(A).reshape(10,10)
+print(A)
+B = extract_grayscale_patches(A,[4,4],stride=(2,2))
+print(B[0].shape[0])
+print(B)
+
+
+OR = cv2.imread('../PAaror/OR_denoise/2.png')
+OR =  cv2.cvtColor(OR, cv2.COLOR_RGB2GRAY)
+
+#def elastic_deformation(img, sigma, seed):
+#    """
+#    img: ndarray
+#    alpha: scaling factor to control the deformation intensity
+#    sigma: elasticity coefficient
+#    seed: random integer from 1 to 100
+#    """  
+#    if seed > 40:
+#        alpha = 34
+#        random_state = np.random.RandomState(seed) 
+#        #image = np.pad(img, pad_size, mode="symmetric")
+#        center_square, square_size = np.float32(img.shape)//2, min(img.shape)//3
+
+#        pts1 = np.float32([center_square + square_size, [center_square[0] + square_size, center_square[1] - square_size],
+#                           center_square - square_size])
+#        pts2 = pts1 + random_state.uniform(-img.shape[1]*0.08, img.shape[1]*0.08, size=pts1.shape).astype(np.float32)
+#        m = cv2.getAffineTransform(pts1,pts2)
+#        image = cv2.warpAffine(img, m, img.shape,  borderMode=cv2.BORDER_REFLECT_101) #random affine transform
+
+#        #generate random displacement fields by gaussian conv
+#        dx = dy = gaussian_filter((random_state.rand(*image.shape)*2 - 1),
+#                             sigma, mode="constant", cval=0) * alpha 
+#        x, y =np.meshgrid(np.arange(image.shape[1]), np.arange(image.shape[0])) #grid coordinate matrix
+#        indices = np.reshape(y+dy, (-1, 1)), np.reshape(x+dx, (-1, 1))
+#        img_ela = map_coordinates(image, indices, order=1).reshape(*image.shape) #preform bilinear interpolation
+#    else:
+#        img_ela = img
+#    return img_ela
+
+
+#def test(img1,img2,patchH, patchW):     
+    
+#    patch_num = img2.shape[0]//patchH * img2.shape[1]//patchW
+
+#    for i in range(img2.shape[0]//patchH):
+#        for j in range(img2.shape[1]//patchW):
+
+#            img1[i*patchH:(i+1)*patchH, j*patchW:(j+1)*patchW] = \
+#                            elastic_deformation(img2[i*patchH:(i+1)*patchH, j*patchW:(j+1)*patchW],6,50)         
+#    return img1
+
+#OR_ela1 = np.zeros(OR.shape,dtype=np.float32)
+
+#OR_ela1 = test(OR_ela1,OR,200,200)
+#OR_ela2 = elastic_deformation(OR, 6, 50)
+
+#plt.figure
+#plt.tight_layout()
+#plt.subplot(1,3,1)
+#plt.imshow(OR)
+#plt.axis('off')
+#plt.title('original')
+#plt.subplot(1,3,2)
+#plt.imshow(OR_ela1)
+#plt.axis('off')
+#plt.title('regional ela')
+#plt.subplot(1,3,3)
+#plt.imshow(OR_ela2)
+#plt.axis('off')
+#plt.title('whole ela')
+#plt.show()
+
+#def extract_grayscale_patches( img, shape, offset=(0,0), stride=(1,1) ):
+#    """Extracts (typically) overlapping regular patches from a grayscale image
+
+#    Changing the offset and stride parameters will result in images
+#    reconstructed by reconstruct_from_grayscale_patches having different
+#    dimensions! Callers should pad and unpad as necessary!
+
+#    Args:
+#        img (HxW ndarray): input image from which to extract patches
+
+#        shape (2-element arraylike): shape of that patches as (h,w)
+
+#        offset (2-element arraylike): offset of the initial point as (y,x)
+
+#        stride (2-element arraylike): vertical and horizontal strides
+
+#    Returns:
+#        patches (ndarray): output image patches as (N,shape[0],shape[1]) array
+
+#        origin (2-tuple): array of top and array of left coordinates
+#    """
+#    px, py = np.meshgrid( np.arange(shape[1]),np.arange(shape[0]))
+#    l, t = np.meshgrid(
+#        np.arange(offset[1],img.shape[1]-shape[1]+1,stride[1]),
+#        np.arange(offset[0],img.shape[0]-shape[0]+1,stride[0]) )
+#    l = l.ravel()
+#    t = t.ravel()
+#    x = np.tile( px[None,:,:], (t.size,1,1)) + np.tile( l[:,None,None], (1,shape[0],shape[1]))
+#    y = np.tile( py[None,:,:], (t.size,1,1)) + np.tile( t[:,None,None], (1,shape[0],shape[1]))
+#    return img[y.ravel(),x.ravel()].reshape((t.size,shape[0],shape[1])), (t,l)
+
+#A = [x for x in range(1,101)]
+#A = np.array(A).reshape(10,10)
+#print(A)
+#B = extract_grayscale_patches(A,[4,4],stride=(2,2))
+#print(B[0].shape[0])
+#print(B)
+
+
+#def Rotation(img, options):
+#    """
+#    img: ndarray
+#    angle: rotation angle: 0,90,180,270
+#    """
+#    rows, cols = img.shape
+#    if options == 0:
+#        angle = 0
+#    elif options == 1:
+#        angle = 90
+#    elif options == 2:
+#        angle = 270
+
+#    rot_matrix = cv2.getRotationMatrix2D((cols/2,rows/2),angle,1)
+#    image = cv2.warpAffine(img,rot_matrix,(rows, cols))
+#    return rot_matrix, image
+
+#A = [x for x in range(1,101)]
+#A = np.array(A).reshape(10,10).astype(np.uint8)
+#print(A)
+#matrix, B = Rotation(A,1)
+#print(matrix)
+#print(B)
+#print(A[:,::-1])
+
+#OR_aug =  np.load('../Data_aug/OR_aug.npy') #(10,144,2000,2000)
+#export_path = '../Data_aug/OR_val/ORaug_2_54'+'.png'
+#mpimg.imsave(export_path, OR_aug[1][53])
+
+#OR_label =  np.load('../Data_aug/OR_label.npy') #(10,144,2000,2000)
+#export_path = '../Data_aug/OR_val_label/ORlabel_2_54'+'.png'
+#mpimg.imsave(export_path, OR_label[1][53])
+
+def Rotation(img, options):
+    """
+    img: ndarray
+    angle: rotation angle: 0,90,180,270
+    """
+    rows, cols = img.shape
+    if options == 0:
+        angle = 0
+    elif options == 1:
+        angle = 90
+    elif options == 2:
+        angle = 270
+
+    rot_matrix = cv2.getRotationMatrix2D((cols/2,rows/2),angle,1)
+    image = cv2.warpAffine(img,rot_matrix,(rows, cols))
+    return image
+
+def Elastic_Deformation(img, sigma, seed):
+    """
+    img: ndarray
+    alpha: scaling factor to control the deformation intensity
+    sigma: elasticity coefficient
+    seed: random integer from 1 to 100
+    """  
+    if seed > 40:
+        alpha = 34
+        random_state = np.random.RandomState(seed) 
+        #image = np.pad(img, pad_size, mode="symmetric")
+        center_square, square_size = np.float32(img.shape)//2, min(img.shape)//3
+
+        pts1 = np.float32([center_square + square_size, [center_square[0] + square_size, center_square[1] - square_size],
+                           center_square - square_size])
+        pts2 = pts1 + random_state.uniform(-img.shape[1]*0.08, img.shape[1]*0.08, size=pts1.shape).astype(np.float32)
+        m = cv2.getAffineTransform(pts1,pts2)
+        image = cv2.warpAffine(img, m, img.shape,  borderMode=cv2.BORDER_REFLECT_101) #random affine transform
+
+        #generate random displacement fields by gaussian conv
+        dx = dy = gaussian_filter((random_state.rand(*image.shape)*2 - 1),
+                             sigma, mode="constant", cval=0) * alpha 
+        x, y =np.meshgrid(np.arange(image.shape[1]), np.arange(image.shape[0])) #grid coordinate matrix
+        indices = np.reshape(y+dy, (-1, 1)), np.reshape(x+dx, (-1, 1))
+        img_ela = map_coordinates(image, indices, order=1).reshape(*image.shape) #preform bilinear interpolation
+    else:
+        img_ela = img
+    return img_ela
+
+def Flip(img, options):
+    """
+    img: ndarry
+    options: 0, 1, 2, 3 for different flipping
+    p: probability, [0,1]
+    """
+    if options == 0:
+        image = img  #no operation
+    elif options == 1:
+        image = cv2.flip(img, 0, dst=None) #horizontal flipping(mirroring)
+    elif options == 2:
+        image = cv2.flip(img, 1, dst=None) #vertical flipping
+    elif options == 3:
+        image = cv2.flip(img, -1, dst=None) #diagonal flipping
+        
+    return image
+
+OR_npy = np.load('../Data_aug/OR_npy.npy')
+export_path = '../Data_aug/OR_val_label/OR2_ela_rot90'+'.png'
+mpimg.imsave(export_path, Flip(Rotation(Elastic_Deformation(OR_npy[1],6,50),1),1))
+
+for i in range(val_sum):
+    export_path = '../Data_aug/OR_val/'+str(i+1)+'.png'
+    mpimg.imsave(export_path, OR_val[i])
+
+for i in range(val_label_sum):
+    export_path = '../Data_aug/OR_val_label/'+str(i+1)+'.png'
+    mpimg.imsave(export_path, OR_val_label[i])
+
+#coord = [(i,j) for i in range(10) for j in range(10)] # example
+#for i in range(10):
+#    data_coord.append([])
+#    for j in range(144):
+#        data_coord[i].append(coord)
+
+
+AR_aug =  np.load('../Data_aug/AR_aug.npy') #(10,144,2000,2000)
+OR_aug =  np.load('../Data_aug/OR_aug.npy') #(10,144,2000,2000)
+
+f.write("size of AR_aug: " + str(AR_aug.shape) + '\n')
+f.write("size of OR_aug: " + str(OR_aug.shape) + '\n')
+f.write ("Read augmented data done" + '\n')
+f.flush()
+
+#Image patch extraction based on vessel density sceening result
+def Extract_Patch(img1, img2, patchH, patchW, overlap):
+    """
+    img: ndarray
+    patch_size: touple, size of image patch 
+    """
+    # threshld segmentation
+    img_uint8 = img2.copy()
+    img_uint8 = np.rint(255 * img_uint8).astype(np.uint8)
+    img_thr = cv2.adaptiveThreshold(img_uint8, 1, cv2.ADAPTIVE_THRESH_MEAN_C,
+                                                cv2.THRESH_BINARY, 201, -4)  # thresholding
+
+    # remove small connected areas less than min_size
+    img_remove = morphology.remove_small_objects(img_thr.astype(np.bool), min_size=10, connectivity=2)
+    img_remove = img_remove.astype(np.int) #binary image
+   
+    #calculate  vessel density
+    density_mean = np.mean(img_remove)
+    density_std = np.std(img_remove, ddof=1)
+    f.write ("mean of OR PAM vessel density is: " + str(density_mean) + '\n')
+    f.flush()
+
+    # extract AR and OR image patch given OR PAM vessel density
+    rows, cols = img2.shape
+    patch_num = (rows-overlap)//(patchH-overlap) * (cols-overlap)//(patchW-overlap)
+    #DataSet1, DataSet2 = [], []
+    Coord = []
+    
+    for i in range((rows-overlap)//(patchH-overlap)):
+        for j in range((cols-overlap)//(patchW-overlap)):
+            density = np.mean(img_remove[i*(patchH-overlap):(i+1)*patchH-i*overlap,
+                                       j*(patchW-overlap):(j+1)*patchW-j*overlap])
+            if density < density_mean/6: # threshold for screening
+                continue
+            else:
+                #DataSet1.append(img1[i*(patchH-overlap):(i+1)*patchH-i*overlap,
+                #                j*(patchW-overlap):(j+1)*patchW-j*overlap])
+                #DataSet2.append(img2[i*(patchH-overlap):(i+1)*patchH-i*overlap,
+                #                    j*(patchW-overlap):(j+1)*patchW-j*overlap])
+                Coord.append((i,j))
+            
+
+    #DataSet1, DataSet2 = np.array(DataSet1), np.array(DataSet2)
+    #DataLen = len(DataSet2)
+    #f.write("Number of patches: " + str(DataLen) + '\n')
+    #f.flush()
+
+    #return DataLen, Coord, DataSet1, DataSet2
+    return Coord
+
+## Divide into training/val/test set 
+
+#AR_train = np.zeros(shape=(8*144*100,256,256), dtype=np.float16)
+#OR_train = np.zeros(shape=(8*144*100,256,256), dtype=np.float16)
+
+#AR_val = np.zeros(shape=(1*144*100,256,256), dtype=np.float16)
+#OR_val = np.zeros(shape=(1*144*100,256,256), dtype=np.float16)
+
+#AR_test = np.zeros(shape=(1*144*100,256,256), dtype=np.float16)
+#OR_test = np.zeros(shape=(1*144*100,256,256), dtype=np.float16)
+
+f.write("Starting Dividing into training/val/test set" + '\n')
+f.flush()
+
+data_coord = [] #[7,144,[()]] Nested list of coordinate sets of extracted patches
+
+#coord = [(i,j) for i in range(10) for j in range(10)] # example
+#for i in range(10):
+#    data_coord.append([])
+#    for j in range(144):
+#        data_coord[i].append(coord)
+
+train_sum, val_sum, test_sum = 0, 0, 0
+for i in range(10):
+    data_coord.append([])
+
+    if i == 1:    # Val set
+        f.write('Val set begin' + '\n')
+        f.flush()
+        for j in range(144):
+            f.write(str(i+1) + '|' + str(j+1) + '\n')
+            f.flush()
+
+            mixed_data = Extract_Patch(AR_aug[i,j,:,:], OR_aug[i,j,:,:], 256, 256, 64) 
+            #data_len = mixed_data[0]
+            #data_coord[i].append(mixed_data[1])
+            data_coord[i].append(mixed_data)
+            #val_sum += data_len
+            #AR_val[val_sum-data_len:val_sum,:,:], OR_val[val_sum-data_len:val_sum,:,:] = mixed_data[2], mixed_data[3]
+
+    elif i == 6:  # Test set
+        f.write('Test set begin' + '\n')
+        f.flush()
+        for j in range(144):           
+            f.write(str(i+1) + '|' + str(j+1) + '\n')
+            f.flush() 
+
+            mixed_data = Extract_Patch(AR_aug[i,j,:,:], OR_aug[i,j,:,:], 256, 256, 64) 
+            #data_len = mixed_data[0]
+            #data_coord[i].append(mixed_data[1])
+            data_coord[i].append(mixed_data)
+            #test_sum += data_len
+            #AR_test[test_sum-data_len:test_sum,:,:], OR_test[test_sum-data_len:test_sum,:,:] = mixed_data[2], mixed_data[3]
+
+    else:  #Train set
+        f.write('Train set begin' + '\n')
+        f.flush()
+        for j in range(144):
+            f.write(str(i+1) + '|' + str(j+1) + '\n')
+            f.flush()
+            mixed_data = Extract_Patch(AR_aug[i,j,:,:], OR_aug[i,j,:,:], 256, 256, 64) 
+            #data_len = mixed_data[0]
+            #data_coord[i].append(mixed_data[1])
+            data_coord[i].append(mixed_data)
+            #train_sum += data_len
+            #AR_train[train_sum-data_len:train_sum,:,:], OR_train[train_sum-data_len:train_sum,:,:] = mixed_data[2], mixed_data[3]
+
+# save data_coord
+coord_file = open('../data_coord.txt', 'w+')
+for i in range(10):
+    for j in range(144):
+        for coord in data_coord[i][j]:
+            coord_file.write(str(coord) + ',')
+        coord_file.write('\n')
+coord_file.close()
+
+set_len = [train_sum, val_sum, test_sum]
+len_str =','.join(str(e) for e in set_len)
+f.write("length of train/val/test: " + len_str + '\n')
+f.flush()
+
+del AR_aug, OR_aug
+gc.collect()
+
+# Obtain train/val/test labels
+
+#AR_label = np.zeros(shape=(10,144,2000,2000), dtype=np.float32)
+#OR_label = np.zeros(shape=(10,144,2000,2000), dtype=np.float32)
+
+parms_label, parm = [], {}
+for i in range(4):
+    for j in range(3):
+        for k in range(3):
+            for m in range(2):
+                for n in range(2):
+                    parm = {'flip_option':i, 'rot_option':j, 
+                                'ela_parm':{'sigma':6, 'seed':10*(k-1)+50}, 'gamma_option':0, 'noise_option':0}
+                    parms_label.append(parm)
+
+#for i in range(10):
+#    for j in range(144):
+#        AR_label[i, j, :, :] = Add_Gaussian_Noise(Gamma_Transform(Elastic_Deformation(Rotation(Flip(AR_npy[i], 
+#                      parms_label[j]['flip_option']), parms_label[j]['rot_option']), parms_label[j]['ela_parm']['sigma'],
+#                       parms_label[j]['ela_parm']['seed']), parms_label[j]['gamma_option']), parms_label[j]['noise_option'])
+#        OR_label[i, j, :, :] = Add_Gaussian_Noise(Gamma_Transform(Elastic_Deformation(Rotation(Flip(OR_npy[i], 
+#                      parms_label[j]['flip_option']), parms_label[j]['rot_option']), parms_label[j]['ela_parm']['sigma'],
+#                       parms_label[j]['ela_parm']['seed']), parms_label[j]['gamma_option']), parms_label[j]['noise_option'])
+    
+#np.save('../Data_aug/AR_label.npy', AR_label) 
+#np.save('../Data_aug/OR_label.npy', OR_label)
+#f.write ("Data label done: AR_label(10,144,2000,2000), OR_label(10,144,2000,2000)")
+#f.flush()
+
+AR_label =  np.load('../Data_aug/AR_label.npy') #(10,144,2000,2000)
+OR_label =  np.load('../Data_aug/OR_label.npy') #(10,144,2000,2000)
+f.write ("Read data label done: AR_label(10,144,2000,2000), OR_label(10,144,2000,2000)")
+f.flush()
+
+
+def Find_PatchLabel(img1, img2, Coord, parm): # Without coordinate transform but only image transform
+    '''
+    img1,img2: ndarray
+    Coord: list of coordinate sets of extracted patches
+    parm: dict of transform parameters
+    return one int-ype data and two ndarray: DataLen, img1_label, img2_label
+    '''
+    DataLen = len(Coord)
+    DataSet1, DataSet2 = [], []
+    flip_inv = parm['flip_option']
+    rot_inv = (3-parm['rot_option'])*(parm['rot_option']!=0)
+
+    for i in range(DataLen):
+        DataSet1.append(Flip(Rotation(img1[Coord[i][0]*192:(Coord[i][0]+1)*256-Coord[i][0]*64,
+                                    Coord[i][1]*192:(Coord[i][1]+1)*256-Coord[i][1]*64],rot_inv),flip_inv))
+
+        DataSet2.append(Flip(Rotation(img2[Coord[i][0]*192:(Coord[i][0]+1)*256-Coord[i][0]*64,
+                                    Coord[i][1]*192:(Coord[i][1]+1)*256-Coord[i][1]*64],rot_inv),flip_inv))
+        
+    
+    DataSet1, DataSet2 = np.array(DataSet1), np.array(DataSet2)
+    f.write("Number of patch labels: " + str(DataLen) + '\n')
+    f.flush()
+
+    return DataLen, DataSet1, DataSet2
+
+
+f.write("Starting finding training/val/test label" + '\n')
+f.flush()
+
+AR_train_label = np.zeros(shape=(8*144*100,256,256), dtype=np.float16)
+OR_train_label = np.zeros(shape=(8*144*100,256,256), dtype=np.float16)
+
+AR_val_label = np.zeros(shape=(1*144*100,256,256), dtype=np.float16)
+OR_val_label = np.zeros(shape=(1*144*100,256,256), dtype=np.float16)
+
+AR_test_label = np.zeros(shape=(1*144*100,256,256), dtype=np.float16)
+OR_test_label = np.zeros(shape=(1*144*100,256,256), dtype=np.float16)
+
+
+train_label_sum, val_label_sum, test_label_sum = 0, 0, 0
+for i in range(1,2):
+    if i == 1:    # Val label
+        f.write('Val label begin' + '\n')
+        f.flush()
+        for j in range(53,54):
+            f.write(str(i+1) + '|' + str(j+1) + '\n')
+            f.flush()
+            mixed_data = Find_PatchLabel(AR_label[i,j,:,:],OR_label[i,j,:,:],data_coord[i][j],parms_label[j]) 
+            data_len = mixed_data[0]
+            val_label_sum += data_len
+            AR_val_label[val_label_sum-data_len:val_label_sum,:,:], \
+                       OR_val_label[val_label_sum-data_len:val_label_sum,:,:] = mixed_data[1], mixed_data[2]
+
+    elif i == 6:  # Test label
+        f.write('Test label begin' + '\n')
+        f.flush()
+        for j in range(144):           
+            f.write(str(i+1) + '|' + str(j+1) + '\n')
+            f.flush() 
+            mixed_data = Find_PatchLabel(AR_label[i,j,:,:],OR_label[i,j,:,:],data_coord[i][j],parms_label[j]) 
+            data_len = mixed_data[0]
+            test_label_sum += data_len
+            AR_test_label[test_label_sum-data_len:test_label_sum,:,:], \
+                       OR_test_label[test_label_sum-data_len:test_label_sum,:,:] = mixed_data[1], mixed_data[2]
+            
+    else:      # Train label
+        f.write('Train label begin' + '\n')
+        f.flush()
+        for j in range(144):
+            f.write(str(i+1) + '|' + str(j+1) + '\n')
+            f.flush()
+            mixed_data = Find_PatchLabel(AR_label[i,j,:,:],OR_label[i,j,:,:],data_coord[i][j],parms_label[j]) 
+            data_len = mixed_data[0]
+            train_label_sum += data_len
+            AR_train_label[train_label_sum-data_len:train_label_sum,:,:], \
+                       OR_train_label[train_label_sum-data_len:train_label_sum,:,:] = mixed_data[1], mixed_data[2]
+
+label_len = [train_label_sum, val_label_sum, test_label_sum]
+len_str =','.join(str(e) for e in label_len)
+f.write("length of train/val/test label: " + len_str + '\n')
+f.flush()
+
+
+
+# Save tain/val/test set and their labels 
+#np.save('../Data_aug/AR_train.npy', AR_train)
+#np.save('../Data_aug/AR_val.npy', AR_val)
+#np.save('../Data_aug/AR_test.npy', AR_test)
+
+#np.save('../Data_aug/OR_train.npy', OR_train)
+#np.save('../Data_aug/OR_val.npy', OR_val)
+#np.save('../Data_aug/OR_test.npy', OR_test)
+
+
+np.save('../Data_aug/AR_train_label.npy', AR_train_label)
+np.save('../Data_aug/AR_val_label.npy', AR_val_label)
+np.save('../Data_aug/AR_test_label.npy', AR_test_label)
+
+np.save('../Data_aug/OR_train_label.npy', OR_train_label)
+np.save('../Data_aug/OR_val_label.npy', OR_val_label)
+np.save('../Data_aug/OR_test_label.npy', OR_test_label)
+
+f.write("All training/val/test set and labels saved!")
+print(TempH, TempW)
+plt.figure
+plt.imshow(OR_src)
+plt.show()
+
+def PCC(x,y):
+    '''
+    To calculate the Pearson correlation coefficient between two images
+    x: AR-PAM image, y: OR-PAM image
+    '''
+    M,N = y.shape
+    x = x.flatten(order='F')
+    y = y.flatten(order='F')
+    x_mean = np.mean(x,axis=0)
+    y_mean = np.mean(y,axis=0)
+    vx = (x-x_mean)
+    vy = (y-y_mean)
+    PCC = np.mean(vx*vy,axis=0)/(np.sqrt(np.mean(vx**2)+ 1e-8) * np.sqrt(np.mean(vy**2) + 1e-8))
+    return PCC
+
+
+
+for i in range(144):
+    path1 = '../registration/AR3_aug/'+str(i+1)+'.png'
+    path2 = '../registration/OR3_aug/'+str(i+1)+'.png'
+    mpimg.imsave(path1, AR_aug[2,i,:,:])
+    mpimg.imsave(path2, OR_aug[2,i,:,:])
+
+#def Gamma_Transform(img, gamma):
+#    """
+#    img: ndarray
+#    gamma: coefficient of gamma transform
+#    """
+#    img_gamma = np.power(img, gamma)
+#    img_gamma[img>1] = 1
+#    img_gamma[img<0] = 0
+#    return img_gamma
+
+
+#gamma_value  = [0.4,0.6,0.8,1,2] # Brightness shift of image for different gamma value 
+#plt.figure
+#for i in range(5):
+#    plt.subplot(1,5,i+1)
+#    plt.imshow(Gamma_Transform(OR_npy[6], gamma_value[i]))
+
+#plt.show()
+
+plt.figure
+plt.tight_layout()
+plt.subplot(1,2,1)
+plt.imshow(AR_npy[2])
+plt.axis('off')
+plt.title('ARPAM')
+plt.subplot(1,2,2)
+plt.imshow(OR_npy[2])
+plt.axis('off')
+plt.title('ORPAM')
+plt.show()
+
+
+print(AR3_match.reshape(-1,1), max(OR3_match.reshape(-1,1)))
+print(max(AR_npy[2].reshape(-1,1)), max(OR_npy[2].reshape(-1,1)))
+
+
+AR3_match =  np.load('../Data_aug/AR3_match.npy') #(1567,1567)
+OR3_match =  np.load('../Data_aug/OR3_match.npy') #(1567,1567)
+
+
+AR_aug[2] = np.zeros(shape=(144,2000,2000), dtype=np.float32)
+OR_aug[2] = np.zeros(shape=(144,2000,2000), dtype=np.float32)
+
+
+import re
+data_coord = []
+
+coord_file = open('../data_coord.txt')
+line = coord_file.readline()
+for i in range(10):
+    data_coord.append([])
+    for j in range(144):
+        if line:
+            curline = list(line.split(','))[:-1]
+            newline = iter(curline)
+            strline = [(int(re.findall('\d+',e)[0]), int(re.findall('\d+',next(newline))[0])) for e in newline]
+            data_coord[i].append(strline)
+        line = coord_file.readline()
+
+coord_file.close()
+
+new_coord_file = open('../new_data_coord.txt', 'w+')
+for i in range(10):
+    for j in range(144):
+        for coord in data_coord[i][j]:
+            new_coord_file.write(str(coord) + ',')
+        new_coord_file.write('\n')
+new_coord_file.close()
+
+#print(data_coord[0][0])
+
+
+for i in range(144):
+    path = '../OR_3/'+str(i+1)+'.png'
+    mpimg.imsave(path, OR_aug[2,i])
+[0], OR2_rot[1], OR2_rot[2]
